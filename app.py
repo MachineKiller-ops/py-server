@@ -1,8 +1,10 @@
-from flask import Flask
+from flask import Flask, send_from_directory
 
-app = Flask(__name__)
+app = Flask(__name__, static_url_path='')
 
 
 @app.route("/")
 def index():
-    return "Hello this is the new version!"
+
+    file_name = 'SM.xlsx'
+    return app.send_static_file(filename=file_name)
