@@ -1,13 +1,19 @@
-from flask import Flask, send_from_directory
-from flask import jsonify
+from flask import Flask, request
+from flask import json
 from openpyxl import load_workbook
 import os
 
 app = Flask(__name__, static_url_path='')
 
 
-@app.route("/")
+def print_conteudo(event_data):
+    print(event_data.get("body"))
+
+
+@app.route("/", methods=['POST'])
 def index():
+    event_data = request.json
+    print_conteudo(event_data)
     # load excel file
     workbook = load_workbook(filename=os.path.join('static', "SM.xlsx"))
 
@@ -39,4 +45,4 @@ def set_headers(response):
 
 
 if __name__ == "__main__":
-    app.run(host='127.0.0.1', port=5004)
+    app.run(host='127.0.0.1', port=5005)
