@@ -27,8 +27,8 @@ def cria_pagina(event_data, page, cont, tipo):
         print(i)
         if (i >= 31):
             workbook.save(filename=os.path.join('static', "SMout.xlsx"))
-            cria_pagina(event_data, page, cont, tipo)
-            return
+            page = cria_pagina(event_data, page, cont, tipo)
+            return page
         elif(i == len(event_data)-1):
             if((i+1) % 32 != 0):
                 num += 1
@@ -38,50 +38,13 @@ def cria_pagina(event_data, page, cont, tipo):
                 sheet[cell_im] = "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
                 sheet[cell_ix] = "XXX"
                 sheet[cell_time] = "XXX"
+            for x in range(page+1, 11):
+                workbook.remove(workbook[tipo + str(x)])
             workbook.save(filename=os.path.join('static', "SMout.xlsx"))
-            return
-
-
-""" def grava_conteudo(event_data):
-    print(event_data[0])
-    page = 1
-    # load excel file
-    workbook = load_workbook(filename=os.path.join('static', "SM.xlsx"))
-    print(workbook.sheetnames)
-    # open workbook
-    sheet = workbook.active
-    cont = 1
-    # modify the desired cell
-    for i, new_val in enumerate(event_data):
-        num = i+8
-        cell_ix = "A%d" % num
-        cell_time = "B%d" % num
-        cell_im = "C%d" % num
-        sheet[cell_im] = new_val
-        sheet[cell_ix] = cont
-        sheet[cell_time] = ':'
-        cont += 1
-        print(i)
-        if (i >= 31):
-            workbook.save(filename=os.path.join('static', "SMout.xlsx"))
-            cria_pagina(event_data, page, cont)
-            print('saiu')
-            return
-        elif(i == len(event_data)-1):
-            print(i)
-            if((i+1) % 32 != 0):
-                num += 1
-                cell_ix = "A%d" % num
-                cell_time = "B%d" % num
-                cell_im = "C%d" % num
-                sheet[cell_im] = "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
-                sheet[cell_ix] = "XXX"
-                sheet[cell_time] = "XXX"
-            workbook.save(filename=os.path.join('static', "SMout.xlsx"))
-            return
-    # save the file
+            return page
+    for x in range(page, 11):
+        workbook.remove(workbook[tipo + str(x)])
     workbook.save(filename=os.path.join('static', "SMout.xlsx"))
- """
 
 
 @app.route("/", methods=['POST'])
@@ -90,7 +53,7 @@ def index():
     # cria e salva um novo arquivo Excel
     workbook = load_workbook(filename=os.path.join('static', "SM.xlsx"))
     workbook.save(filename=os.path.join('static', "SMout.xlsx"))
-
+    workbook = load_workbook(filename=os.path.join('static', "SMout.xlsx"))
     cria_pagina(event_data['seqIsolar'], 0, 1, "ISOLAR-")
     print(event_data['seqNormalizar'])
     cria_pagina(event_data['seqNormalizar'], 0, 1, "NORMALIZAR-")
